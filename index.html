@@ -10,17 +10,112 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     html { scroll-behavior: smooth; }
+
+    /* ── Show More / Accordion shared styles ── */
+    .hidden-item { display: none !important; }
+
+    .show-more-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 2rem auto 0;
+      padding: 12px 32px;
+      border-radius: 50px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--gold);
+      font-family: var(--ff-body);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .show-more-btn:hover {
+      background: var(--gold);
+      color: var(--bg);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201,168,76,0.25);
+    }
+    .show-more-btn .btn-arrow {
+      font-size: 0.75rem;
+      transition: transform 0.3s;
+    }
+    .show-more-btn.expanded .btn-arrow { transform: rotate(180deg); }
+
+    /* ── Accordion (School Rules) ── */
+    .accordion-rule { margin-bottom: 0.8rem; }
+    .accordion-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--cream);
+      text-align: left;
+      transition: all 0.3s ease;
+    }
+    .accordion-trigger:hover { border-color: var(--gold); }
+    .accordion-trigger.open { 
+      border-bottom-left-radius: 0; 
+      border-bottom-right-radius: 0;
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .accordion-trigger-left { display: flex; align-items: center; gap: 12px; }
+    .accordion-icon { font-size: 1.3rem; }
+    .accordion-chevron {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+    .accordion-trigger.open .accordion-chevron { transform: rotate(180deg); color: var(--gold); }
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--gold);
+      border-top: none;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .accordion-body.open { max-height: 400px; }
+    .accordion-body-inner { padding: 16px 20px; }
+    .accordion-body .rule-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .accordion-body .rule-list li {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+    }
+    .accordion-body .rule-list li::before {
+      content: '◆';
+      position: absolute; left: 0; top: 4px;
+      font-size: 0.4rem;
+      color: var(--gold);
+    }
+
+    /* ── Gallery load more ── */
+    .gallery-load-more-wrap { text-align: center; margin-top: 2rem; }
   </style>
 </head>
 <body>
 
-  <!-- Cursor -->
   <div class="cursor" id="cursor"></div>
   <div class="cursor-follower" id="cursorFollower"></div>
 
-  <!-- ═══════════════════════════════════════
-       NAV
-  ════════════════════════════════════════ -->
+  <!-- NAV -->
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="#hero" class="logo">
@@ -43,9 +138,7 @@
     </div>
   </nav>
 
-  <!-- ═══════════════════════════════════════
-       HERO
-  ════════════════════════════════════════ -->
+  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-bg">
       <div class="hero-grid"></div>
@@ -67,65 +160,47 @@
         <a href="#programs" class="btn btn--primary">Explore Programs</a>
         <a href="#about" class="btn btn--ghost">Our Story →</a>
       </div>
-      
-      </div>
     </div>
-    <div class="hero-image-wrap reveal">
-      <div class="hero-image-card">
-        <img
-          src="images/new hero.png"
-          alt="Greatbridge Academy"
-          class="hero-school-photo"
-          onerror="this.style.display='none'"
-        />
-        <div class="hero-card-badge">
-          <span class="badge-dot"></span>
-          Top Ranked Academy 2024
-        </div>
-      </div>
-    </div>
+ 
+
+<div class="hero-bg">
+  <div class="hero-bg-photo"></div>   ← ADD THIS LINE
+  <div class="hero-grid"></div>
+  <div class="hero-orb hero-orb--1"></div>
+  <div class="hero-orb hero-orb--2"></div>
+  <div class="hero-orb hero-orb--3"></div>
+</div>
+
+
+
+
     <div class="scroll-hint">
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       ABOUT
-  ════════════════════════════════════════ -->
+  <!-- ABOUT -->
   <section class="about section" id="about">
     <div class="container">
       <div class="about-grid">
         <div class="about-left">
           <div class="section-tag reveal">Who We Are</div>
           <h2 class="section-title reveal">A Legacy of <em>Learning</em></h2>
-          <p class="about-text reveal">
-            Founded in 1998, Greatbridge Academy has grown from a small community school into a celebrated institution known for academic rigor, compassionate teaching, and a relentless commitment to student growth.
-          </p>
-          <p class="about-text reveal">
-            We believe education extends beyond the classroom. Our holistic approach nurtures intellectual curiosity, social responsibility, and personal development — equipping students with the tools to thrive.
-          </p>
+          <p class="about-text reveal">Founded in 1998, Greatbridge Academy has grown from a small community school into a celebrated institution known for academic rigor, compassionate teaching, and a relentless commitment to student growth.</p>
+          <p class="about-text reveal">We believe education extends beyond the classroom. Our holistic approach nurtures intellectual curiosity, social responsibility, and personal development — equipping students with the tools to thrive.</p>
           <div class="about-pillars reveal">
             <div class="pillar">
               <div class="pillar-icon"></div>
-              <div>
-                <strong>Academic Excellence</strong>
-                <p>Challenging curriculum designed to push potential</p>
-              </div>
+              <div><strong>Academic Excellence</strong><p>Challenging curriculum designed to push potential</p></div>
             </div>
             <div class="pillar">
               <div class="pillar-icon"></div>
-              <div>
-                <strong>Global Perspective</strong>
-                <p>Preparing students for an interconnected world</p>
-              </div>
+              <div><strong>Global Perspective</strong><p>Preparing students for an interconnected world</p></div>
             </div>
             <div class="pillar">
               <div class="pillar-icon"></div>
-              <div>
-                <strong>Innovation Mindset</strong>
-                <p>Fostering creativity and critical thinking</p>
-              </div>
+              <div><strong>Innovation Mindset</strong><p>Fostering creativity and critical thinking</p></div>
             </div>
           </div>
         </div>
@@ -151,9 +226,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       PROGRAMS
-  ════════════════════════════════════════ -->
+  <!-- PROGRAMS -->
   <section class="programs section" id="programs">
     <div class="container">
       <div class="section-header">
@@ -208,12 +281,9 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       ACADEMICS
-  ════════════════════════════════════════ -->
+  <!-- ACADEMICS -->
   <section class="section" id="academics">
     <div class="container">
-      <!-- Page Hero style header -->
       <div class="inner-header" style="text-align:center;margin-bottom:3rem;">
         <div class="section-tag reveal">Our Academic Offering</div>
         <h2 class="section-title reveal">World-Class <em>Academics</em></h2>
@@ -234,106 +304,31 @@
           <h2 class="section-title">Competency Based <em>Curriculum</em></h2>
           <p class="section-desc">The CBC framework is at the heart of our delivery — designed to develop the whole child through values, skills, and knowledge.</p>
         </div>
-
         <div class="four-grid reveal">
-          <div class="info-card">
-            <div class="ic-icon"></div>
-            <strong>Learner-Centred</strong>
-            <p>Every lesson is designed around the child's strengths, pace, and interests — not a one-size-fits-all approach.</p>
-          </div>
-          <div class="info-card">
-            <div class="ic-icon"></div>
-            <strong>Values & Character</strong>
-            <p>CBC instils love, responsibility, unity, peace, patriotism, and social justice in every learner.</p>
-          </div>
-          <div class="info-card">
-            <div class="ic-icon"></div>
-            <strong>Practical Skills</strong>
-            <p>Hands-on projects, community involvement, and career pathways prepare students for real-world challenges.</p>
-          </div>
-          <div class="info-card">
-            <div class="ic-icon"></div>
-            <strong>Continuous Assessment</strong>
-            <p>Learning measured through portfolios and projects — not just final exams.</p>
-          </div>
+          <div class="info-card"><div class="ic-icon"></div><strong>Learner-Centred</strong><p>Every lesson is designed around the child's strengths, pace, and interests.</p></div>
+          <div class="info-card"><div class="ic-icon"></div><strong>Values & Character</strong><p>CBC instils love, responsibility, unity, peace, patriotism, and social justice.</p></div>
+          <div class="info-card"><div class="ic-icon"></div><strong>Practical Skills</strong><p>Hands-on projects and career pathways prepare students for real-world challenges.</p></div>
+          <div class="info-card"><div class="ic-icon"></div><strong>Continuous Assessment</strong><p>Learning measured through portfolios and projects — not just final exams.</p></div>
         </div>
-
         <h3 class="sub-title reveal">CBC Learning Levels at Greatbridge</h3>
         <div class="levels-grid reveal">
           <div class="level-card">
-            <div class="lc-top lc-pp">
-              <span class="lc-badge">Pre-Primary</span>
-              <span class="lc-grade">PP1 – PP2 · Ages 4–5</span>
-            </div>
-            <div class="lc-body">
-              <p>Play-based learning that fosters curiosity, creativity, and foundational literacy and numeracy.</p>
-              <ul>
-                <li>Language Activities</li>
-                <li>Mathematical Activities</li>
-                <li>Environmental Activities</li>
-                <li>Psychomotor & Creative Arts</li>
-                <li>Religious Education</li>
-              </ul>
-            </div>
+            <div class="lc-top lc-pp"><span class="lc-badge">Pre-Primary</span><span class="lc-grade">PP1 – PP2 · Ages 4–5</span></div>
+            <div class="lc-body"><p>Play-based learning that fosters curiosity, creativity, and foundational literacy.</p><ul><li>Language Activities</li><li>Mathematical Activities</li><li>Environmental Activities</li><li>Psychomotor & Creative Arts</li><li>Religious Education</li></ul></div>
           </div>
           <div class="level-card">
-            <div class="lc-top lc-lp">
-              <span class="lc-badge">Lower Primary</span>
-              <span class="lc-grade">Grade 1–3 · Ages 6–8</span>
-            </div>
-            <div class="lc-body">
-              <p>Transition from play-based to structured learning focused on literacy, numeracy, and discovery.</p>
-              <ul>
-                <li>Literacy</li>
-                <li>Kiswahili Language Activities</li>
-                <li>Mathematical Activities</li>
-                <li>Environmental Activities</li>
-                <li>Creative Arts & Crafts</li>
-                <li>Music</li>
-              </ul>
-            </div>
+            <div class="lc-top lc-lp"><span class="lc-badge">Lower Primary</span><span class="lc-grade">Grade 1–3 · Ages 6–8</span></div>
+            <div class="lc-body"><p>Transition from play-based to structured learning focused on literacy and numeracy.</p><ul><li>Literacy</li><li>Kiswahili Language Activities</li><li>Mathematical Activities</li><li>Environmental Activities</li><li>Creative Arts & Crafts</li><li>Music</li></ul></div>
           </div>
           <div class="level-card">
-            <div class="lc-top lc-up">
-              <span class="lc-badge">Upper Primary</span>
-              <span class="lc-grade">Grade 4–6 · Ages 9–11</span>
-            </div>
-            <div class="lc-body">
-              <p>Deeper subject engagement and introduction to career pathways through diverse learning areas.</p>
-              <ul>
-                <li>English</li>
-                <li>Kiswahili</li>
-                <li>Mathematics</li>
-                <li>Integrated Science</li>
-                <li>Social Studies</li>
-                <li>Agriculture & Nutrition</li>
-                <li>Creative Arts & Crafts</li>
-                <li>Physical & Health Education</li>
-              </ul>
-            </div>
+            <div class="lc-top lc-up"><span class="lc-badge">Upper Primary</span><span class="lc-grade">Grade 4–6 · Ages 9–11</span></div>
+            <div class="lc-body"><p>Deeper subject engagement and introduction to career pathways.</p><ul><li>English</li><li>Kiswahili</li><li>Mathematics</li><li>Integrated Science</li><li>Social Studies</li><li>Agriculture & Nutrition</li><li>Creative Arts & Crafts</li><li>Physical & Health Education</li></ul></div>
           </div>
           <div class="level-card">
-            <div class="lc-top lc-jss">
-              <span class="lc-badge">Junior Secondary</span>
-              <span class="lc-grade">Grade 7–9 · Ages 12–14</span>
-            </div>
-            <div class="lc-body">
-              <p>Specialised subjects and career pathway exploration across STEM, Arts, and Social Sciences.</p>
-              <ul>
-                <li>English</li>
-                <li>Kiswahili</li>
-                <li>Mathematics</li>
-                <li>Integrated Science</li>
-                <li>Business Studies</li>
-                <li>Agriculture</li>
-                <li>Social Studies</li>
-                <li>Creative Arts</li>
-                <li>Physical Education</li>
-              </ul>
-            </div>
+            <div class="lc-top lc-jss"><span class="lc-badge">Junior Secondary</span><span class="lc-grade">Grade 7–9 · Ages 12–14</span></div>
+            <div class="lc-body"><p>Specialised subjects and career pathway exploration across STEM, Arts, and Social Sciences.</p><ul><li>English</li><li>Kiswahili</li><li>Mathematics</li><li>Integrated Science</li><li>Business Studies</li><li>Agriculture</li><li>Social Studies</li><li>Creative Arts</li><li>Physical Education</li></ul></div>
           </div>
         </div>
-
         <div class="values-banner reveal">
           <h3>CBC Core Values We Champion</h3>
           <div class="values-grid">
@@ -350,7 +345,7 @@
       </div>
     </div>
 
-    <!-- JUNIOR SCHOOL SUBJECTS -->
+    <!-- JUNIOR SCHOOL SUBJECTS — show 6, hide 6 -->
     <div class="inner-section inner-section--alt" id="junior">
       <div class="container">
         <div class="inner-header reveal">
@@ -358,108 +353,68 @@
           <h2 class="section-title">Subjects <em>Offered</em></h2>
           <p class="section-desc">Our junior school curriculum is broad, balanced, and designed to ignite passions early while building strong academic foundations.</p>
         </div>
-        <div class="subjects-grid reveal">
+        <div class="subjects-grid reveal" id="subjectsGrid">
+
+          <!-- Visible by default (6) -->
           <div class="subj-card">
             <div class="subj-icon" style="background:rgba(99,102,241,0.12);color:#818cf8"></div>
-            <div>
-              <strong>English Language & Literature</strong>
-              <p>Reading, creative writing, grammar, oral communication, and literature appreciation.</p>
-              <div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div><strong>English Language & Literature</strong><p>Reading, creative writing, grammar, oral communication, and literature appreciation.</p><div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div></div>
           </div>
           <div class="subj-card">
-            <div class="subj-icon" style="background:rgba(16,185,129,0.12);color:#34d399"></div>
-            <div>
-              <strong>Kiswahili</strong>
-              <p>National language mastery through listening, speaking, reading, and writing.</p>
-              <div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div class="subj-icon" style="background:rgba(16,185,129,0.12);color:#34d399">🇰🇪</div>
+            <div><strong>Kiswahili</strong><p>National language mastery through listening, speaking, reading, and writing.</p><div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div></div>
           </div>
           <div class="subj-card">
             <div class="subj-icon" style="background:rgba(201,168,76,0.12);color:#c9a84c"></div>
-            <div>
-              <strong>Mathematics</strong>
-              <p>Number theory, algebra, geometry, statistics, and real-world problem solving.</p>
-              <div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div><strong>Mathematics</strong><p>Number theory, algebra, geometry, statistics, and real-world problem solving.</p><div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div></div>
           </div>
           <div class="subj-card">
             <div class="subj-icon" style="background:rgba(239,68,68,0.12);color:#f87171"></div>
-            <div>
-              <strong>Integrated Science</strong>
-              <p>Biology, Chemistry, and Physics explored through inquiry, experiments, and discovery.</p>
-              <div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">Grade 4–9</span></div>
-            </div>
+            <div><strong>Integrated Science</strong><p>Biology, Chemistry, and Physics explored through inquiry, experiments, and discovery.</p><div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">Grade 4–9</span></div></div>
           </div>
           <div class="subj-card">
             <div class="subj-icon" style="background:rgba(245,158,11,0.12);color:#fbbf24"></div>
-            <div>
-              <strong>Social Studies</strong>
-              <p>Geography, history, civics, and citizenship to develop well-rounded global thinkers.</p>
-              <div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div><strong>Social Studies</strong><p>Geography, history, civics, and citizenship to develop well-rounded global thinkers.</p><div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div></div>
           </div>
           <div class="subj-card">
             <div class="subj-icon" style="background:rgba(139,92,246,0.12);color:#a78bfa"></div>
-            <div>
-              <strong>Creative Arts & Crafts</strong>
-              <p>Drawing, painting, sculpture, textile, and digital art for creative expression.</p>
-              <div class="subj-tags"><span class="tag-elective">Elective</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div><strong>Creative Arts & Crafts</strong><p>Drawing, painting, sculpture, textile, and digital art for creative expression.</p><div class="subj-tags"><span class="tag-elective">Elective</span><span class="tag-grade">All Grades</span></div></div>
           </div>
-          <div class="subj-card">
+
+          <!-- Hidden by default (6) — shown on "View More" -->
+          <div class="subj-card hidden-item" data-extra="subjects">
             <div class="subj-icon" style="background:rgba(16,185,129,0.12);color:#34d399"></div>
-            <div>
-              <strong>Music</strong>
-              <p>Vocal training, instrument learning, music theory, choir, and band performance.</p>
-              <div class="subj-tags"><span class="tag-elective">Elective</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div><strong>Music</strong><p>Vocal training, instrument learning, music theory, choir, and band performance.</p><div class="subj-tags"><span class="tag-elective">Elective</span><span class="tag-grade">All Grades</span></div></div>
           </div>
-          <div class="subj-card">
+          <div class="subj-card hidden-item" data-extra="subjects">
             <div class="subj-icon" style="background:rgba(201,168,76,0.12);color:#c9a84c"></div>
-            <div>
-              <strong>Agriculture & Nutrition</strong>
-              <p>Practical farming, food science, environmental sustainability, and healthy living.</p>
-              <div class="subj-tags"><span class="tag-practical">Practical</span><span class="tag-grade">Grade 4–9</span></div>
-            </div>
+            <div><strong>Agriculture & Nutrition</strong><p>Practical farming, food science, environmental sustainability, and healthy living.</p><div class="subj-tags"><span class="tag-practical">Practical</span><span class="tag-grade">Grade 4–9</span></div></div>
           </div>
-          <div class="subj-card">
+          <div class="subj-card hidden-item" data-extra="subjects">
             <div class="subj-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa"></div>
-            <div>
-              <strong>Physical & Health Education</strong>
-              <p>Team sports, athletics, gymnastics, and health education for holistic development.</p>
-              <div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div><strong>Physical & Health Education</strong><p>Team sports, athletics, gymnastics, and health education for holistic development.</p><div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div></div>
           </div>
-          <div class="subj-card">
+          <div class="subj-card hidden-item" data-extra="subjects">
             <div class="subj-icon" style="background:rgba(244,114,182,0.12);color:#f472b6"></div>
-            <div>
-              <strong>Religious Education</strong>
-              <p>CRE and IRE offered based on learner's faith background and preference.</p>
-              <div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div>
-            </div>
+            <div><strong>Religious Education</strong><p>CRE and IRE offered based on learner's faith background and preference.</p><div class="subj-tags"><span class="tag-core">Core</span><span class="tag-grade">All Grades</span></div></div>
           </div>
-          <div class="subj-card">
+          <div class="subj-card hidden-item" data-extra="subjects">
             <div class="subj-icon" style="background:rgba(99,102,241,0.12);color:#818cf8"></div>
-            <div>
-              <strong>Computer Studies / ICT</strong>
-              <p>Digital literacy, coding basics, internet safety, and Microsoft Office tools.</p>
-              <div class="subj-tags"><span class="tag-practical">Practical</span><span class="tag-grade">Grade 4–9</span></div>
-            </div>
+            <div><strong>Computer Studies / ICT</strong><p>Digital literacy, coding basics, internet safety, and Microsoft Office tools.</p><div class="subj-tags"><span class="tag-practical">Practical</span><span class="tag-grade">Grade 4–9</span></div></div>
           </div>
-          <div class="subj-card">
+          <div class="subj-card hidden-item" data-extra="subjects">
             <div class="subj-icon" style="background:rgba(245,158,11,0.12);color:#fbbf24"></div>
-            <div>
-              <strong>Business Studies</strong>
-              <p>Entrepreneurship, basic accounting, commerce, and financial literacy skills.</p>
-              <div class="subj-tags"><span class="tag-elective">Elective</span><span class="tag-grade">Grade 7–9</span></div>
-            </div>
+            <div><strong>Business Studies</strong><p>Entrepreneurship, basic accounting, commerce, and financial literacy skills.</p><div class="subj-tags"><span class="tag-elective">Elective</span><span class="tag-grade">Grade 7–9</span></div></div>
           </div>
+
         </div>
+        <button class="show-more-btn" id="subjectsToggle">
+          View More Subjects <span class="btn-arrow">▾</span>
+        </button>
       </div>
     </div>
 
-    <!-- ACADEMIC PROGRAMMES -->
+    <!-- ACADEMIC PROGRAMMES — show 3, hide 3 -->
     <div class="inner-section" id="programmes">
       <div class="container">
         <div class="inner-header reveal">
@@ -467,81 +422,45 @@
           <h2 class="section-title">Academic <em>Programmes</em></h2>
           <p class="section-desc">Beyond the standard curriculum, Greatbridge offers enrichment programmes that challenge, inspire, and stretch every learner.</p>
         </div>
-        <div class="programmes-list">
+        <div class="programmes-list" id="programmesList">
+
+          <!-- Visible by default (3) -->
           <div class="prog-card reveal">
             <div class="prog-num">01</div>
-            <div class="prog-body">
-              <div class="prog-icon"></div>
-              <div>
-                <h3>Gifted & Talented Programme</h3>
-                <p>An accelerated learning track for high-achieving students featuring advanced coursework, mentorship from university professionals, and national competition preparation in Mathematics, Science, and Languages.</p>
-                <div class="prog-meta"><span>Grade 5–9</span><span>By Assessment</span><span>Term 1 Intake</span></div>
-              </div>
-            </div>
+            <div class="prog-body"><div class="prog-icon"></div><div><h3>Gifted & Talented Programme</h3><p>An accelerated learning track for high-achieving students featuring advanced coursework, mentorship from university professionals, and national competition preparation.</p><div class="prog-meta"><span>Grade 5–9</span><span>By Assessment</span><span>Term 1 Intake</span></div></div></div>
           </div>
           <div class="prog-card reveal">
             <div class="prog-num">02</div>
-            <div class="prog-body">
-              <div class="prog-icon"></div>
-              <div>
-                <h3>STEM Innovation Lab</h3>
-                <p>Weekly lab sessions, robotics, coding bootcamps, and an annual Science Fair where students present original research to judges from industry and academia.</p>
-                <div class="prog-meta"><span>Grade 4–9</span><span>Open Enrolment</span><span>Year-Round</span></div>
-              </div>
-            </div>
+            <div class="prog-body"><div class="prog-icon"></div><div><h3>STEM Innovation Lab</h3><p>Weekly lab sessions, robotics, coding bootcamps, and an annual Science Fair where students present original research to judges from industry and academia.</p><div class="prog-meta"><span>Grade 4–9</span><span>Open Enrolment</span><span>Year-Round</span></div></div></div>
           </div>
           <div class="prog-card reveal">
             <div class="prog-num">03</div>
-            <div class="prog-body">
-              <div class="prog-icon"></div>
-              <div>
-                <h3>Global Citizenship Programme</h3>
-                <p>Interdisciplinary programme covering global issues, UN SDGs, debate, Model United Nations (MUN), and community service projects that cultivate socially conscious leaders.</p>
-                <div class="prog-meta"><span>Grade 6–9</span><span>Open Enrolment</span><span>Year-Round</span></div>
-              </div>
-            </div>
+            <div class="prog-body"><div class="prog-icon"></div><div><h3>Global Citizenship Programme</h3><p>Interdisciplinary programme covering global issues, UN SDGs, debate, Model United Nations, and community service projects that cultivate socially conscious leaders.</p><div class="prog-meta"><span>Grade 6–9</span><span>Open Enrolment</span><span>Year-Round</span></div></div></div>
           </div>
-          <div class="prog-card reveal">
+
+          <!-- Hidden by default (3) -->
+          <div class="prog-card reveal hidden-item" data-extra="programmes">
             <div class="prog-num">04</div>
-            <div class="prog-body">
-              <div class="prog-icon"></div>
-              <div>
-                <h3>Remedial & Support Programme</h3>
-                <p>Personalised academic support with dedicated teachers and educational psychologists for learners who need extra time or different approaches.</p>
-                <div class="prog-meta"><span>All Grades</span><span>Referred Learners</span><span>Daily After School</span></div>
-              </div>
-            </div>
+            <div class="prog-body"><div class="prog-icon"></div><div><h3>Remedial & Support Programme</h3><p>Personalised academic support with dedicated teachers and educational psychologists for learners who need extra time or different approaches.</p><div class="prog-meta"><span>All Grades</span><span>Referred Learners</span><span>Daily After School</span></div></div></div>
           </div>
-          <div class="prog-card reveal">
+          <div class="prog-card reveal hidden-item" data-extra="programmes">
             <div class="prog-num">05</div>
-            <div class="prog-body">
-              <div class="prog-icon"></div>
-              <div>
-                <h3>Arts Enrichment Programme</h3>
-                <p>Drama, choir, visual arts, and dance as structured weekly enrichment. Students perform in termly concerts and the annual Arts Gala.</p>
-                <div class="prog-meta"><span>All Grades</span><span>Open Enrolment</span><span>Weekly Sessions</span></div>
-              </div>
-            </div>
+            <div class="prog-body"><div class="prog-icon"></div><div><h3>Arts Enrichment Programme</h3><p>Drama, choir, visual arts, and dance as structured weekly enrichment. Students perform in termly concerts and the annual Arts Gala.</p><div class="prog-meta"><span>All Grades</span><span>Open Enrolment</span><span>Weekly Sessions</span></div></div></div>
           </div>
-          <div class="prog-card reveal">
+          <div class="prog-card reveal hidden-item" data-extra="programmes">
             <div class="prog-num">06</div>
-            <div class="prog-body">
-              <div class="prog-icon"></div>
-              <div>
-                <h3>Junior Entrepreneurship Programme</h3>
-                <p>Students develop mini-business plans and pitch to entrepreneurs. Culminates in a Junior Business Expo every Term 3 where students sell real products and services.</p>
-                <div class="prog-meta"><span>Grade 5–9</span><span>Open Enrolment</span><span>Term 3 Expo</span></div>
-              </div>
-            </div>
+            <div class="prog-body"><div class="prog-icon"></div><div><h3>Junior Entrepreneurship Programme</h3><p>Students develop mini-business plans and pitch to entrepreneurs. Culminates in a Junior Business Expo every Term 3 where students sell real products and services.</p><div class="prog-meta"><span>Grade 5–9</span><span>Open Enrolment</span><span>Term 3 Expo</span></div></div></div>
           </div>
+
         </div>
+        <button class="show-more-btn" id="programmesToggle">
+          View More Programmes <span class="btn-arrow">▾</span>
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       CAMPUS
-  ════════════════════════════════════════ -->
+  <!-- CAMPUS -->
   <section class="campus section" id="campus">
     <div class="container">
       <div class="section-header">
@@ -549,106 +468,29 @@
         <h2 class="section-title reveal">A Place to <em>Thrive</em></h2>
       </div>
       <div class="campus-features">
-        <div class="cf-item reveal">
-          <div class="cf-num">01</div>
-          <div class="cf-content">
-            <h3>State-of-the-Art Facilities</h3>
-            <p>Modern science labs, a 500-seat auditorium, Olympic-grade sports facilities, and high-speed Wi-Fi across campus.</p>
-          </div>
-        </div>
-        <div class="cf-item reveal">
-          <div class="cf-num">02</div>
-          <div class="cf-content">
-            <h3>Vibrant Student Life</h3>
-            <p>Over 40 clubs, student government, cultural festivals, and community outreach programs keep students engaged beyond the classroom.</p>
-          </div>
-        </div>
-        <div class="cf-item reveal">
-          <div class="cf-num">03</div>
-          <div class="cf-content">
-            <h3>Boarding & Day Options</h3>
-            <p>Comfortable, supervised boarding facilities with a home-like environment, or convenient day schooling with extended hours.</p>
-          </div>
-        </div>
-        <div class="cf-item reveal">
-          <div class="cf-num">04</div>
-          <div class="cf-content">
-            <h3>Dedicated Counseling</h3>
-            <p>Full-time pastoral care, academic counselors, and mental health professionals supporting every student's journey.</p>
-          </div>
-        </div>
+        <div class="cf-item reveal"><div class="cf-num">01</div><div class="cf-content"><h3>State-of-the-Art Facilities</h3><p>Modern science labs, a 500-seat auditorium, Olympic-grade sports facilities, and high-speed Wi-Fi across campus.</p></div></div>
+        <div class="cf-item reveal"><div class="cf-num">02</div><div class="cf-content"><h3>Vibrant Student Life</h3><p>Over 40 clubs, student government, cultural festivals, and community outreach programs keep students engaged beyond the classroom.</p></div></div>
+        <div class="cf-item reveal"><div class="cf-num">03</div><div class="cf-content"><h3>Boarding & Day Options</h3><p>Comfortable, supervised boarding facilities with a home-like environment, or convenient day schooling with extended hours.</p></div></div>
+        <div class="cf-item reveal"><div class="cf-num">04</div><div class="cf-content"><h3>Dedicated Counseling</h3><p>Full-time pastoral care, academic counselors, and mental health professionals supporting every student's journey.</p></div></div>
       </div>
     </div>
     <div class="campus-ticker">
       <div class="ticker-inner">
-        <span>Excellence</span><span class="ticker-dot">◆</span>
-        <span>Innovation</span><span class="ticker-dot">◆</span>
-        <span>Community</span><span class="ticker-dot">◆</span>
-        <span>Leadership</span><span class="ticker-dot">◆</span>
-        <span>Integrity</span><span class="ticker-dot">◆</span>
-        <span>Curiosity</span><span class="ticker-dot">◆</span>
-        <span>Excellence</span><span class="ticker-dot">◆</span>
-        <span>Innovation</span><span class="ticker-dot">◆</span>
-        <span>Community</span><span class="ticker-dot">◆</span>
-        <span>Leadership</span><span class="ticker-dot">◆</span>
-        <span>Integrity</span><span class="ticker-dot">◆</span>
-        <span>Curiosity</span><span class="ticker-dot">◆</span>
+        <span>Excellence</span><span class="ticker-dot">◆</span><span>Innovation</span><span class="ticker-dot">◆</span><span>Community</span><span class="ticker-dot">◆</span><span>Leadership</span><span class="ticker-dot">◆</span><span>Integrity</span><span class="ticker-dot">◆</span><span>Curiosity</span><span class="ticker-dot">◆</span><span>Excellence</span><span class="ticker-dot">◆</span><span>Innovation</span><span class="ticker-dot">◆</span><span>Community</span><span class="ticker-dot">◆</span><span>Leadership</span><span class="ticker-dot">◆</span><span>Integrity</span><span class="ticker-dot">◆</span><span>Curiosity</span><span class="ticker-dot">◆</span>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       TESTIMONIALS
-  ════════════════════════════════════════ -->
+  <!-- TESTIMONIALS -->
   <section class="testimonials section">
     <div class="container">
       <div class="section-tag reveal">Voices</div>
       <h2 class="section-title reveal">What Our <em>Community</em> Says</h2>
       <div class="testimonials-track" id="testimonialsTrack">
-        <div class="testimonial-card">
-          <div class="tc-stars">★★★★★</div>
-          <p>"Greatbridge didn't just prepare my daughter academically — it gave her confidence and a sense of purpose I never expected."</p>
-          <div class="tc-author">
-            <div class="tc-avatar">MN</div>
-            <div>
-              <strong>Mrs. Njoroge</strong>
-              <span>Parent, Form 4</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="tc-stars">★★★★★</div>
-          <p>"The teachers here genuinely care. The STEM programme turned my passion for coding into a scholarship to a top university."</p>
-          <div class="tc-author">
-            <div class="tc-avatar">KO</div>
-            <div>
-              <strong>Kevin Odhiambo</strong>
-              <span>Alumni, Class of 2022</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="tc-stars">★★★★★</div>
-          <p>"As a teacher, I've never worked in a more collaborative, student-first environment. Greatbridge's culture is genuinely special."</p>
-          <div class="tc-author">
-            <div class="tc-avatar">SM</div>
-            <div>
-              <strong>Mr. Samuel Mwangi</strong>
-              <span>Head of Mathematics</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="tc-stars">★★★★★</div>
-          <p>"I came shy and unsure. I left Greatbridge as school captain, with a full scholarship. It truly transforms lives."</p>
-          <div class="tc-author">
-            <div class="tc-avatar">AF</div>
-            <div>
-              <strong>Amara Farah</strong>
-              <span>Alumni, Class of 2023</span>
-            </div>
-          </div>
-        </div>
+        <div class="testimonial-card"><div class="tc-stars">★★★★★</div><p>"Greatbridge didn't just prepare my daughter academically — it gave her confidence and a sense of purpose I never expected."</p><div class="tc-author"><div class="tc-avatar">MN</div><div><strong>Mrs. Njoroge</strong><span>Parent, Form 4</span></div></div></div>
+        <div class="testimonial-card"><div class="tc-stars">★★★★★</div><p>"The teachers here genuinely care. The STEM programme turned my passion for coding into a scholarship to a top university."</p><div class="tc-author"><div class="tc-avatar">KO</div><div><strong>Kevin Odhiambo</strong><span>Alumni, Class of 2022</span></div></div></div>
+        <div class="testimonial-card"><div class="tc-stars">★★★★★</div><p>"As a teacher, I've never worked in a more collaborative, student-first environment. Greatbridge's culture is genuinely special."</p><div class="tc-author"><div class="tc-avatar">SM</div><div><strong>Mr. Samuel Mwangi</strong><span>Head of Mathematics</span></div></div></div>
+        <div class="testimonial-card"><div class="tc-stars">★★★★★</div><p>"I came shy and unsure. I left Greatbridge as school captain, with a full scholarship. It truly transforms lives."</p><div class="tc-author"><div class="tc-avatar">AF</div><div><strong>Amara Farah</strong><span>Alumni, Class of 2023</span></div></div></div>
       </div>
       <div class="testimonials-nav">
         <button class="tn-btn" id="tPrev">←</button>
@@ -658,60 +500,31 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       NEWS
-  ════════════════════════════════════════ -->
+  <!-- NEWS -->
   <section class="news section" id="news">
     <div class="container">
       <div class="news-header">
-        <div>
-          <div class="section-tag reveal">Latest News</div>
-          <h2 class="section-title reveal">School <em>Updates</em></h2>
-        </div>
+        <div><div class="section-tag reveal">Latest News</div><h2 class="section-title reveal">School <em>Updates</em></h2></div>
         <a href="#" class="btn btn--ghost reveal">View All News →</a>
       </div>
       <div class="news-grid">
         <div class="news-card news-card--featured reveal">
-          <div class="nc-img nc-img--featured">
-            <div class="nc-placeholder"><span></span></div>
-            <div class="nc-cat">Achievement</div>
-          </div>
-          <div class="nc-body">
-            <div class="nc-date">May 28, 2025</div>
-            <h3>Greatbridge Wins National Science Olympiad for 3rd Consecutive Year</h3>
-            <p>Our brilliant students brought home gold at the Kenya National Science Olympiad, beating over 200 schools across the country.</p>
-            <a href="#" class="nc-link">Read More →</a>
-          </div>
+          <div class="nc-img nc-img--featured"><div class="nc-placeholder"><span></span></div><div class="nc-cat">Achievement</div></div>
+          <div class="nc-body"><div class="nc-date">May 28, 2025</div><h3>Greatbridge Wins National Science Olympiad for 3rd Consecutive Year</h3><p>Our brilliant students brought home gold at the Kenya National Science Olympiad, beating over 200 schools across the country.</p><a href="#" class="nc-link">Read More →</a></div>
         </div>
         <div class="news-card reveal">
-          <div class="nc-img">
-            <div class="nc-placeholder"><span></span></div>
-            <div class="nc-cat">Arts</div>
-          </div>
-          <div class="nc-body">
-            <div class="nc-date">May 15, 2025</div>
-            <h3>Annual Drama Festival Returns with Record Attendance</h3>
-            <a href="#" class="nc-link">Read More →</a>
-          </div>
+          <div class="nc-img"><div class="nc-placeholder"><span></span></div><div class="nc-cat">Arts</div></div>
+          <div class="nc-body"><div class="nc-date">May 15, 2025</div><h3>Annual Drama Festival Returns with Record Attendance</h3><a href="#" class="nc-link">Read More →</a></div>
         </div>
         <div class="news-card reveal">
-          <div class="nc-img">
-            <div class="nc-placeholder"><span></span></div>
-            <div class="nc-cat">Community</div>
-          </div>
-          <div class="nc-body">
-            <div class="nc-date">May 5, 2025</div>
-            <h3>Students Launch Clean Water Initiative in Surrounding Communities</h3>
-            <a href="#" class="nc-link">Read More →</a>
-          </div>
+          <div class="nc-img"><div class="nc-placeholder"><span></span></div><div class="nc-cat">Community</div></div>
+          <div class="nc-body"><div class="nc-date">May 5, 2025</div><h3>Students Launch Clean Water Initiative in Surrounding Communities</h3><a href="#" class="nc-link">Read More →</a></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       GALLERY
-  ════════════════════════════════════════ -->
+  <!-- GALLERY — show 8, hide rest -->
   <section class="gallery section" id="gallery">
     <div class="container">
       <div class="section-header">
@@ -719,7 +532,6 @@
         <h2 class="section-title reveal">Life at <em>Greatbridge</em></h2>
         <p class="section-desc reveal">A glimpse into our vibrant campus — buildings, classrooms, sports, events, and the people who make it all happen.</p>
       </div>
-
       <div class="gallery-tabs reveal">
         <button class="gtab active" data-filter="all">All</button>
         <button class="gtab" data-filter="buildings">Buildings</button>
@@ -728,128 +540,76 @@
         <button class="gtab" data-filter="events">Events</button>
         <button class="gtab" data-filter="principal">Leadership</button>
       </div>
-
       <div class="gallery-grid" id="galleryGrid">
 
         <div class="gallery-item gallery-item--wide reveal" data-category="buildings">
-          <div class="gi-img">
-            <img src="images/sc. building.jfif" alt="Main School Building" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Main School Building</span></div>
-          </div>
+          <div class="gi-img"><img src="images/sc. building.jfif" alt="Main School Building" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🏫</span><span class="gi-ph-label">Main School Building</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Buildings</span><p class="gi-title">Main School Building</p></div>
         </div>
-
         <div class="gallery-item reveal" data-category="buildings">
-          <div class="gi-img">
-            <img src="images/school library.png" alt="School Library" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">School Library</span></div>
-          </div>
+          <div class="gi-img"><img src="images/school library.png" alt="School Library" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">📚</span><span class="gi-ph-label">School Library</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Buildings</span><p class="gi-title">School Library</p></div>
         </div>
-
         <div class="gallery-item reveal" data-category="buildings">
-          <div class="gi-img">
-            <img src="images/auditorium.jfif" alt="School Auditorium" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Auditorium</span></div>
-          </div>
+          <div class="gi-img"><img src="images/auditorium.jfif" alt="School Auditorium" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🎭</span><span class="gi-ph-label">Auditorium</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Buildings</span><p class="gi-title">Auditorium</p></div>
         </div>
-
         <div class="gallery-item reveal" data-category="classrooms">
-          <div class="gi-img">
-            <img src="images/classroom.jfif" alt="Modern Classroom" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Modern ICT Lab</span></div>
-          </div>
+          <div class="gi-img"><img src="images/classroom.jfif" alt="Modern Classroom" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🖥️</span><span class="gi-ph-label">Modern ICT Lab</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Classrooms</span><p class="gi-title">Modern ICT Lab</p></div>
         </div>
-
         <div class="gallery-item gallery-item--wide reveal" data-category="classrooms">
-          <div class="gi-img">
-            <img src="images\science laboratory.png" alt="science laboratory" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Science Laboratory</span></div>
-          </div>
+          <div class="gi-img"><img src="images/science laboratory.png" alt="Science Laboratory" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🔬</span><span class="gi-ph-label">Science Laboratory</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Classrooms</span><p class="gi-title">Science Laboratory</p></div>
         </div>
-
         <div class="gallery-item reveal" data-category="classrooms">
-          <div class="gi-img">
-            <img src="images/books.jfif" alt="Form 3 Classroom" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Form 3 Classroom</span></div>
-          </div>
+          <div class="gi-img"><img src="images/books.jfif" alt="Form 3 Classroom" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">✏️</span><span class="gi-ph-label">Form 3 Classroom</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Classrooms</span><p class="gi-title">Form 3 Classroom</p></div>
         </div>
-
         <div class="gallery-item gallery-item--tall reveal" data-category="sports">
-          <div class="gi-img">
-            <img src="images/soccer.jfif" alt="Football Team" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Football Team Training</span></div>
-          </div>
+          <div class="gi-img"><img src="images/soccer.jfif" alt="Football Team" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">⚽</span><span class="gi-ph-label">Football Team Training</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Sports</span><p class="gi-title">Football Team Training</p></div>
         </div>
-
         <div class="gallery-item reveal" data-category="sports">
-          <div class="gi-img">
-            <img src="images/athletics.jfif" alt="Athletics" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Athletics Championships</span></div>
-          </div>
+          <div class="gi-img"><img src="images/athletics.jfif" alt="Athletics" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🏃</span><span class="gi-ph-label">Athletics Championships</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Sports</span><p class="gi-title">Athletics Championships</p></div>
         </div>
 
-        <div class="gallery-item reveal" data-category="sports">
-          <div class="gi-img">
-            <img src="images/basketball.jfif" alt="Basketball" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Basketball Court</span></div>
-          </div>
+        <!-- Gallery extra items — hidden by default -->
+        <div class="gallery-item reveal hidden-item" data-category="sports" data-extra="gallery">
+          <div class="gi-img"><img src="images/basketball.jfif" alt="Basketball" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🏀</span><span class="gi-ph-label">Basketball Court</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Sports</span><p class="gi-title">Basketball Court</p></div>
         </div>
-
-        <div class="gallery-item reveal" data-category="events">
-          <div class="gi-img">
-            <img src="images/graduation.jfif" alt="Graduation Ceremony" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Graduation Ceremony 2024</span></div>
-          </div>
+        <div class="gallery-item reveal hidden-item" data-category="events" data-extra="gallery">
+          <div class="gi-img"><img src="images/graduation.jfif" alt="Graduation Ceremony" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🎓</span><span class="gi-ph-label">Graduation Ceremony 2024</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Events</span><p class="gi-title">Graduation Ceremony 2024</p></div>
         </div>
-
-        <div class="gallery-item gallery-item--wide reveal" data-category="events">
-          <div class="gi-img">
-            <img src="images/cultural day.jfif" alt="Cultural Day" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Annual Cultural Day</span></div>
-          </div>
+        <div class="gallery-item gallery-item--wide reveal hidden-item" data-category="events" data-extra="gallery">
+          <div class="gi-img"><img src="images/cultural day.jfif" alt="Cultural Day" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🎉</span><span class="gi-ph-label">Annual Cultural Day</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Events</span><p class="gi-title">Annual Cultural Day</p></div>
         </div>
-
-        <div class="gallery-item reveal" data-category="events">
-          <div class="gi-img">
-            <img src="images/prize giving.jfif" alt="Prize Giving Day" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder"><span class="gi-ph-icon"></span><span class="gi-ph-label">Prize Giving Day</span></div>
-          </div>
+        <div class="gallery-item reveal hidden-item" data-category="events" data-extra="gallery">
+          <div class="gi-img"><img src="images/prize giving.jfif" alt="Prize Giving Day" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder"><span class="gi-ph-icon">🏆</span><span class="gi-ph-label">Prize Giving Day</span></div></div>
           <div class="gi-overlay"><span class="gi-cat">Events</span><p class="gi-title">Prize Giving Day</p></div>
         </div>
-
-        <div class="gallery-item gallery-item--principal reveal" data-category="principal">
-          <div class="gi-img">
-            <img src="images/princ.jfif" alt="School Principal" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-            <div class="gi-placeholder gi-placeholder--principal"><span class="gi-ph-icon"></span><span class="gi-ph-label">School Principal</span></div>
-          </div>
-          <div class="gi-overlay gi-overlay--principal">
-            <span class="gi-cat">Leadership</span>
-            <p class="gi-title">Dr. James Kariuki</p>
-            <p class="gi-subtitle">School Principal</p>
-          </div>
+        <div class="gallery-item gallery-item--principal reveal hidden-item" data-category="principal" data-extra="gallery">
+          <div class="gi-img"><img src="images/princ.jfif" alt="School Principal" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="gi-placeholder gi-placeholder--principal"><span class="gi-ph-icon">👤</span><span class="gi-ph-label">School Principal</span></div></div>
+          <div class="gi-overlay gi-overlay--principal"><span class="gi-cat">Leadership</span><p class="gi-title">Dr. James Kariuki</p><p class="gi-subtitle">School Principal</p></div>
         </div>
-
-        <div class="gallery-item gallery-item--quote reveal" data-category="principal">
+        <div class="gallery-item gallery-item--quote reveal hidden-item" data-category="principal" data-extra="gallery">
           <div class="gi-quote-inner">
             <div class="gi-quote-mark">"</div>
             <p>At Greatbridge, we believe every child carries a spark of greatness. Our mission is simply to fan that flame.</p>
-            <div class="gi-quote-author">
-              <strong>Dr. James Kariuki</strong>
-              <span>Principal, Greatbridge Academy</span>
-            </div>
+            <div class="gi-quote-author"><strong>Dr. James Kariuki</strong><span>Principal, Greatbridge Academy</span></div>
           </div>
         </div>
 
+      </div>
+
+      <div class="gallery-load-more-wrap">
+        <button class="show-more-btn" id="galleryToggle">
+          Load More Photos <span class="btn-arrow">▾</span>
+        </button>
       </div>
 
       <!-- Lightbox -->
@@ -860,19 +620,13 @@
         <div class="lb-content">
           <img src="" alt="" id="lbImg" />
           <div class="lb-placeholder" id="lbPlaceholder"><span id="lbIcon"></span></div>
-          <div class="lb-caption">
-            <span class="lb-cat" id="lbCat"></span>
-            <p id="lbTitle"></p>
-          </div>
+          <div class="lb-caption"><span class="lb-cat" id="lbCat"></span><p id="lbTitle"></p></div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       CTA BANNER
-  ════════════════════════════════════════ -->
+  <!-- CTA BANNER -->
   <section class="cta-banner">
     <div class="cta-banner-inner">
       <div class="cta-orb"></div>
@@ -885,9 +639,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       DOWNLOADS
-  ════════════════════════════════════════ -->
+  <!-- DOWNLOADS -->
   <section class="section" id="downloads">
     <div class="container">
       <div class="inner-header" style="text-align:center;margin-bottom:3rem;">
@@ -903,7 +655,7 @@
       </div>
     </div>
 
-    <!-- ADMISSION FORMS -->
+    <!-- ADMISSION FORMS — show 2, hide 3 -->
     <div class="inner-section" id="admission">
       <div class="container">
         <div class="inner-header reveal">
@@ -913,82 +665,41 @@
         </div>
         <div class="dl-notice reveal">
           <span class="dl-notice-icon"></span>
+          <div>
             <strong>Required Supporting Documents</strong>
             <p>Birth certificate · Previous school report card · Transfer letter (if applicable) · 2 passport photos · Copy of parent/guardian ID</p>
           </div>
         </div>
-        <div class="dl-grid reveal">
+        <div class="dl-grid reveal" id="admissionGrid">
+
+          <!-- Visible (2) -->
           <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon"></div>
-              <div>
-                <strong>Pre-Primary Admission Form</strong>
-                <span>PP1 – PP2 · Ages 4–5</span>
-                <p>For new learners joining the pre-primary stream. Includes health declaration and immunisation record.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\01_PrePrimary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Pre-Primary Admission Form</strong><span>PP1 – PP2 · Ages 4–5</span><p>For new learners joining the pre-primary stream. Includes health declaration and immunisation record.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/01_PrePrimary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
           <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon">📄</div>
-              <div>
-                <strong>Lower Primary Admission Form</strong>
-                <span>Grade 1–3 · Ages 6–8</span>
-                <p>For new learners joining Grade 1 or seeking transfer into Grade 2–3.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\02_LowerPrimary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Lower Primary Admission Form</strong><span>Grade 1–3 · Ages 6–8</span><p>For new learners joining Grade 1 or seeking transfer into Grade 2–3.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/02_LowerPrimary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
-          <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon">📄</div>
-              <div>
-                <strong>Upper Primary Admission Form</strong>
-                <span>Grade 4–6 · Ages 9–11</span>
-                <p>For learners joining the upper primary section, including mid-year transfer applications.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\03_UpperPrimary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+
+          <!-- Hidden (3) -->
+          <div class="dl-card hidden-item" data-extra="admission">
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Upper Primary Admission Form</strong><span>Grade 4–6 · Ages 9–11</span><p>For learners joining the upper primary section, including mid-year transfer applications.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/03_UpperPrimary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
-          <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon">📄</div>
-              <div>
-                <strong>Junior Secondary Admission Form</strong>
-                <span>Grade 7–9 · Ages 12–14</span>
-                <p>For learners transitioning into JSS from primary school or transferring from another institution.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\04_JSS_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+          <div class="dl-card hidden-item" data-extra="admission">
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Junior Secondary Admission Form</strong><span>Grade 7–9 · Ages 12–14</span><p>For learners transitioning into JSS from primary school or transferring from another institution.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/04_JSS_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
-          <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon">📄</div>
-              <div>
-                <strong>Boarding Application Form</strong>
-                <span>Grade 4–9 · All Boarding Learners</span>
-                <p>For learners applying for a boarding place. Submit alongside the relevant academic admission form.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\05_Boarding_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+          <div class="dl-card hidden-item" data-extra="admission">
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Boarding Application Form</strong><span>Grade 4–9 · All Boarding Learners</span><p>For learners applying for a boarding place. Submit alongside the relevant academic admission form.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/05_Boarding_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
+
         </div>
+        <button class="show-more-btn" id="admissionToggle">
+          View All Forms <span class="btn-arrow">▾</span>
+        </button>
       </div>
     </div>
 
@@ -998,86 +709,31 @@
         <div class="inner-header reveal">
           <div class="section-tag">Financials</div>
           <h2 class="section-title">Fee <em>Structure</em></h2>
-          <p class="section-desc">Transparent, all-inclusive fee schedules for the current academic year. Fees cover tuition, materials, activities, and meals.</p>
+          <p class="section-desc">Transparent, all-inclusive fee schedules for the current academic year.</p>
         </div>
         <div class="dl-notice dl-notice--gold reveal">
           <span class="dl-notice-icon"></span>
-          <div>
-            <strong>2025 Academic Year Fees</strong>
-            <p>All fees listed are per term. Three terms per year. Fees are subject to annual review every January. Bursaries and sibling discounts available — enquire at the school office.</p>
-          </div>
+          <div><strong>2025 Academic Year Fees</strong><p>All fees listed are per term. Three terms per year. Bursaries and sibling discounts available — enquire at the school office.</p></div>
         </div>
         <div class="fee-table-wrap reveal">
           <table class="fee-table">
-            <thead>
-              <tr>
-                <th>Level</th>
-                <th>Grades</th>
-                <th>Tuition (per term)</th>
-                <th>Boarding (per term)</th>
-                <th>Total (Day Scholar)</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Level</th><th>Grades</th><th>Tuition (per term)</th><th>Boarding (per term)</th><th>Total (Day Scholar)</th></tr></thead>
             <tbody>
-              <tr>
-                <td><span class="fee-level fee-pp">Pre-Primary</span></td>
-                <td>PP1 – PP2</td>
-                <td>KES 18,000</td>
-                <td>N/A</td>
-                <td>KES 18,000</td>
-              </tr>
-              <tr>
-                <td><span class="fee-level fee-lp">Lower Primary</span></td>
-                <td>Grade 1–3</td>
-                <td>KES 22,000</td>
-                <td>N/A</td>
-                <td>KES 22,000</td>
-              </tr>
-              <tr>
-                <td><span class="fee-level fee-up">Upper Primary</span></td>
-                <td>Grade 4–6</td>
-                <td>KES 28,000</td>
-                <td>KES 32,000</td>
-                <td>KES 28,000</td>
-              </tr>
-              <tr>
-                <td><span class="fee-level fee-jss">Junior Secondary</span></td>
-                <td>Grade 7–9</td>
-                <td>KES 35,000</td>
-                <td>KES 38,000</td>
-                <td>KES 35,000</td>
-              </tr>
+              <tr><td><span class="fee-level fee-pp">Pre-Primary</span></td><td>PP1 – PP2</td><td>KES 18,000</td><td>N/A</td><td>KES 18,000</td></tr>
+              <tr><td><span class="fee-level fee-lp">Lower Primary</span></td><td>Grade 1–3</td><td>KES 22,000</td><td>N/A</td><td>KES 22,000</td></tr>
+              <tr><td><span class="fee-level fee-up">Upper Primary</span></td><td>Grade 4–6</td><td>KES 28,000</td><td>KES 32,000</td><td>KES 28,000</td></tr>
+              <tr><td><span class="fee-level fee-jss">Junior Secondary</span></td><td>Grade 7–9</td><td>KES 35,000</td><td>KES 38,000</td><td>KES 35,000</td></tr>
             </tbody>
           </table>
         </div>
         <div class="dl-grid reveal">
           <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon"></div>
-              <div>
-                <strong>Full Fee Structure 2025</strong>
-                <span>All levels · All terms</span>
-                <p>Complete breakdown including optional extras, uniform costs, and activity fees for the full academic year.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\06_FeeStructure_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Full Fee Structure 2025</strong><span>All levels · All terms</span><p>Complete breakdown including optional extras, uniform costs, and activity fees.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/06_FeeStructure_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
           <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon"></div>
-              <div>
-                <strong>Bursary & Scholarship Application</strong>
-                <span>All levels · Financial assistance</span>
-                <p>Application form for need-based bursaries and merit scholarships. Reviewed every January and August.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\07_Bursary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Bursary & Scholarship Application</strong><span>All levels · Financial assistance</span><p>Application form for need-based bursaries and merit scholarships.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/07_Bursary_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
         </div>
       </div>
@@ -1089,14 +745,11 @@
         <div class="inner-header reveal">
           <div class="section-tag">Academic Year</div>
           <h2 class="section-title">School <em>Calendar</em></h2>
-          <p class="section-desc">Stay informed on term dates, holidays, examination periods, and key school events for the 2025 academic year.</p>
+          <p class="section-desc">Stay informed on term dates, holidays, examination periods, and key school events for 2025.</p>
         </div>
         <div class="cal-terms reveal">
           <div class="cal-term">
-            <div class="cal-term-header ct-t1">
-              <span class="ct-badge">Term 1</span>
-              <span class="ct-dates">January 8 – April 4, 2025</span>
-            </div>
+            <div class="cal-term-header ct-t1"><span class="ct-badge">Term 1</span><span class="ct-dates">January 8 – April 4, 2025</span></div>
             <ul class="ct-events">
               <li><span class="ct-dot ct-dot--gold"></span>Jan 8 — Schools Open</li>
               <li><span class="ct-dot ct-dot--blue"></span>Feb 14 — Inter-House Sports Day</li>
@@ -1107,10 +760,7 @@
             </ul>
           </div>
           <div class="cal-term">
-            <div class="cal-term-header ct-t2">
-              <span class="ct-badge">Term 2</span>
-              <span class="ct-dates">May 6 – August 1, 2025</span>
-            </div>
+            <div class="cal-term-header ct-t2"><span class="ct-badge">Term 2</span><span class="ct-dates">May 6 – August 1, 2025</span></div>
             <ul class="ct-events">
               <li><span class="ct-dot ct-dot--gold"></span>May 6 — Schools Open</li>
               <li><span class="ct-dot ct-dot--blue"></span>Jun 2 — Madaraka Day Holiday</li>
@@ -1122,10 +772,7 @@
             </ul>
           </div>
           <div class="cal-term">
-            <div class="cal-term-header ct-t3">
-              <span class="ct-badge">Term 3</span>
-              <span class="ct-dates">September 2 – November 7, 2025</span>
-            </div>
+            <div class="cal-term-header ct-t3"><span class="ct-badge">Term 3</span><span class="ct-dates">September 2 – November 7, 2025</span></div>
             <ul class="ct-events">
               <li><span class="ct-dot ct-dot--gold"></span>Sep 2 — Schools Open</li>
               <li><span class="ct-dot ct-dot--blue"></span>Sep 26 — Cultural Day & Arts Gala</li>
@@ -1139,124 +786,143 @@
         </div>
         <div class="dl-grid reveal">
           <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon"></div>
-              <div>
-                <strong>Full School Calendar 2025</strong>
-                <span>All terms · All events</span>
-                <p>Printable full-year calendar with all term dates, public holidays, examination periods, and school events.</p>
-              </div>
-            </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\08_SchoolCalendar_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Full School Calendar 2025</strong><span>All terms · All events</span><p>Printable full-year calendar with all term dates, public holidays, examination periods, and school events.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/08_SchoolCalendar_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SCHOOL RULES -->
+    <!-- SCHOOL RULES — accordion -->
     <div class="inner-section inner-section--alt" id="rules">
       <div class="container">
         <div class="inner-header reveal">
           <div class="section-tag">Discipline & Conduct</div>
           <h2 class="section-title">School <em>Rules</em></h2>
-          <p class="section-desc">Our school rules are founded on respect, responsibility, and community. Every learner, parent, and staff member is expected to uphold these standards.</p>
+          <p class="section-desc">Our school rules are founded on respect, responsibility, and community. Click any category to read the rules.</p>
         </div>
-        <div class="rules-grid reveal">
-          <div class="rule-section">
-            <div class="rule-section-header"><span class="rs-icon"></span><h3>Attendance & Punctuality</h3></div>
-            <ul class="rule-list">
-              <li>School gates open at 6:30 AM. All learners must be in class by 7:30 AM.</li>
-              <li>Attendance is compulsory every school day. Absence requires a written explanation from a parent or guardian.</li>
-              <li>Persistent lateness of more than 3 times per term will result in a formal parental meeting.</li>
-              <li>Learners who miss more than 20% of a term's lessons may be required to repeat the term.</li>
-            </ul>
-          </div>
-          <div class="rule-section">
-            <div class="rule-section-header"><span class="rs-icon"></span><h3>Uniform & Appearance</h3></div>
-            <ul class="rule-list">
-              <li>Full school uniform must be worn every day. Sports uniform is worn only on designated PE days.</li>
-              <li>Uniform must be clean, ironed, and worn correctly at all times including travel to and from school.</li>
-              <li>Hair must be neat and natural. Dyeing, perming, or extreme styles are not permitted.</li>
-              <li>Jewellery, makeup, and nail polish are not allowed on school premises.</li>
-            </ul>
-          </div>
-          <div class="rule-section">
-            <div class="rule-section-header"><span class="rs-icon"></span><h3>Electronics & Devices</h3></div>
-            <ul class="rule-list">
-              <li>Mobile phones are not permitted for day scholars during school hours.</li>
-              <li>Boarding students may keep phones but must surrender them by 9:00 PM nightly.</li>
-              <li>Unauthorised devices found during school hours will be confiscated and returned only to a parent.</li>
-              <li>Use of school computers for non-academic purposes is prohibited.</li>
-            </ul>
-          </div>
-          <div class="rule-section">
-            <div class="rule-section-header"><span class="rs-icon"></span><h3>Academic Conduct</h3></div>
-            <ul class="rule-list">
-              <li>All assignments and homework must be submitted on the given deadline.</li>
-              <li>Plagiarism and academic dishonesty in any form will result in a zero mark and disciplinary action.</li>
-              <li>Learners must respect classroom materials, textbooks, and school property.</li>
-              <li>Examinations must be sat under strict exam conditions. Any form of cheating leads to immediate disqualification.</li>
-            </ul>
-          </div>
-          <div class="rule-section">
-            <div class="rule-section-header"><span class="rs-icon"></span><h3>Behaviour & Respect</h3></div>
-            <ul class="rule-list">
-              <li>All learners must treat fellow students, teachers, and staff with courtesy and respect at all times.</li>
-              <li>Bullying, verbal abuse, or physical aggression in any form is a serious offence and will not be tolerated.</li>
-              <li>Profane language on school premises is strictly prohibited.</li>
-              <li>Learners must greet teachers and visitors appropriately and maintain a polite tone at all times.</li>
-            </ul>
-          </div>
-          <div class="rule-section">
-            <div class="rule-section-header"><span class="rs-icon"></span><h3>Boarding Rules</h3></div>
-            <ul class="rule-list">
-              <li>Lights out is at 10:00 PM. All students must be in their dorms by 9:30 PM.</li>
-              <li>Visiting hours are Saturdays from 10:00 AM – 4:00 PM only. Visitors must sign in at the gate.</li>
-              <li>Leaving campus without written permission from the school and parent is a serious offence.</li>
-              <li>Each student is responsible for the cleanliness and order of their personal space and dormitory area.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="dl-grid reveal">
-          <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon"></div>
-              <div>
-                <strong>Full School Rules & Code of Conduct</strong>
-                <span>All learners · Parents & Guardians</span>
-                <p>The complete school rules document including the disciplinary procedure and consequences framework. Parents are required to sign and return the acknowledgement page.</p>
+
+        <div class="accordion-rules reveal" id="accordionRules">
+
+          <div class="accordion-rule">
+            <button class="accordion-trigger">
+              <span class="accordion-trigger-left"><span class="accordion-icon"></span> Attendance & Punctuality</span>
+              <span class="accordion-chevron">▾</span>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                <ul class="rule-list">
+                  <li>School gates open at 6:30 AM. All learners must be in class by 7:30 AM.</li>
+                  <li>Attendance is compulsory every school day. Absence requires a written explanation from a parent or guardian.</li>
+                  <li>Persistent lateness of more than 3 times per term will result in a formal parental meeting.</li>
+                  <li>Learners who miss more than 20% of a term's lessons may be required to repeat the term.</li>
+                </ul>
               </div>
             </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\09_SchoolRules_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
-            </div>
           </div>
-          <div class="dl-card">
-            <div class="dl-card-left">
-              <div class="dl-file-icon"></div>
-              <div>
-                <strong>Parent & Learner Acknowledgement Form</strong>
-                <span>Required · All new students</span>
-                <p>To be signed by both the learner and parent/guardian confirming they have read and agreed to the school rules.</p>
+
+          <div class="accordion-rule">
+            <button class="accordion-trigger">
+              <span class="accordion-trigger-left"><span class="accordion-icon"></span> Uniform & Appearance</span>
+              <span class="accordion-chevron">▾</span>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                <ul class="rule-list">
+                  <li>Full school uniform must be worn every day. Sports uniform is worn only on designated PE days.</li>
+                  <li>Uniform must be clean, ironed, and worn correctly at all times including travel to and from school.</li>
+                  <li>Hair must be neat and natural. Dyeing, perming, or extreme styles are not permitted.</li>
+                  <li>Jewellery, makeup, and nail polish are not allowed on school premises.</li>
+                </ul>
               </div>
             </div>
-            <div class="dl-card-right">
-              <span class="dl-badge">PDF</span>
-              <a href="downloads\10_Acknowledgement_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a>
+          </div>
+
+          <div class="accordion-rule">
+            <button class="accordion-trigger">
+              <span class="accordion-trigger-left"><span class="accordion-icon"></span> Electronics & Devices</span>
+              <span class="accordion-chevron">▾</span>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                <ul class="rule-list">
+                  <li>Mobile phones are not permitted for day scholars during school hours.</li>
+                  <li>Boarding students may keep phones but must surrender them by 9:00 PM nightly.</li>
+                  <li>Unauthorised devices found during school hours will be confiscated and returned only to a parent.</li>
+                  <li>Use of school computers for non-academic purposes is prohibited.</li>
+                </ul>
+              </div>
             </div>
+          </div>
+
+          <div class="accordion-rule">
+            <button class="accordion-trigger">
+              <span class="accordion-trigger-left"><span class="accordion-icon"></span> Academic Conduct</span>
+              <span class="accordion-chevron">▾</span>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                <ul class="rule-list">
+                  <li>All assignments and homework must be submitted on the given deadline.</li>
+                  <li>Plagiarism and academic dishonesty in any form will result in a zero mark and disciplinary action.</li>
+                  <li>Learners must respect classroom materials, textbooks, and school property.</li>
+                  <li>Examinations must be sat under strict exam conditions. Any form of cheating leads to immediate disqualification.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-rule">
+            <button class="accordion-trigger">
+              <span class="accordion-trigger-left"><span class="accordion-icon"></span> Behaviour & Respect</span>
+              <span class="accordion-chevron">▾</span>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                <ul class="rule-list">
+                  <li>All learners must treat fellow students, teachers, and staff with courtesy and respect at all times.</li>
+                  <li>Bullying, verbal abuse, or physical aggression in any form is a serious offence and will not be tolerated.</li>
+                  <li>Profane language on school premises is strictly prohibited.</li>
+                  <li>Learners must greet teachers and visitors appropriately and maintain a polite tone at all times.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-rule">
+            <button class="accordion-trigger">
+              <span class="accordion-trigger-left"><span class="accordion-icon"></span> Boarding Rules</span>
+              <span class="accordion-chevron">▾</span>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-body-inner">
+                <ul class="rule-list">
+                  <li>Lights out is at 10:00 PM. All students must be in their dorms by 9:30 PM.</li>
+                  <li>Visiting hours are Saturdays from 10:00 AM – 4:00 PM only. Visitors must sign in at the gate.</li>
+                  <li>Leaving campus without written permission from the school and parent is a serious offence.</li>
+                  <li>Each student is responsible for the cleanliness and order of their personal space and dormitory area.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="dl-grid reveal" style="margin-top:2rem;">
+          <div class="dl-card">
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Full School Rules & Code of Conduct</strong><span>All learners · Parents & Guardians</span><p>The complete school rules document including the disciplinary procedure and consequences framework.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/09_SchoolRules_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
+          </div>
+          <div class="dl-card">
+            <div class="dl-card-left"><div class="dl-file-icon"></div><div><strong>Parent & Learner Acknowledgement Form</strong><span>Required · All new students</span><p>To be signed by both the learner and parent/guardian confirming they have read and agreed to the school rules.</p></div></div>
+            <div class="dl-card-right"><span class="dl-badge">PDF</span><a href="downloads/10_Acknowledgement_Professional.pdf" download class="btn btn--primary btn--sm">⬇ Download</a></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       CONTACT
-  ════════════════════════════════════════ -->
+  <!-- CONTACT -->
   <section class="contact section" id="contact">
     <div class="container">
       <div class="contact-grid">
@@ -1265,45 +931,18 @@
           <h2 class="section-title">Let's <em>Connect</em></h2>
           <p>We'd love to hear from you. Reach out to our admissions team or visit us on campus.</p>
           <div class="contact-details">
-            <div class="cd-item">
-              <div class="cd-icon"></div>
-              <div>
-                <strong>Address</strong>
-                <span>123 Academy Road, Eldoret, Kenya</span>
-              </div>
-            </div>
-            <div class="cd-item">
-              <div class="cd-icon"></div>
-              <div>
-                <strong>Phone</strong>
-                <span>+254 700 123 456</span>
-              </div>
-            </div>
-            <div class="cd-item">
-              <div class="cd-icon"></div>
-              <div>
-                <strong>Email</strong>
-                <span>admissions@greatbridgeacademy.ac.ke</span>
-              </div>
-            </div>
+            <div class="cd-item"><div class="cd-icon"></div><div><strong>Address</strong><span>123 Academy Road, Eldoret, Kenya</span></div></div>
+            <div class="cd-item"><div class="cd-icon"></div><div><strong>Phone</strong><span>+254 700 123 456</span></div></div>
+            <div class="cd-item"><div class="cd-icon"></div><div><strong>Email</strong><span>admissions@greatbridgeacademy.ac.ke</span></div></div>
           </div>
         </div>
         <div class="contact-form-wrap reveal">
           <form class="contact-form" id="contactForm">
             <div class="form-row">
-              <div class="form-group">
-                <label>First Name</label>
-                <input type="text" placeholder="John" required />
-              </div>
-              <div class="form-group">
-                <label>Last Name</label>
-                <input type="text" placeholder="Doe" required />
-              </div>
+              <div class="form-group"><label>First Name</label><input type="text" placeholder="John" required /></div>
+              <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe" required /></div>
             </div>
-            <div class="form-group">
-              <label>Email Address</label>
-              <input type="email" placeholder="john@example.com" required />
-            </div>
+            <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@example.com" required /></div>
             <div class="form-group">
               <label>Subject</label>
               <select>
@@ -1315,10 +954,7 @@
                 <option>Other</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Message</label>
-              <textarea placeholder="Tell us how we can help..." rows="4"></textarea>
-            </div>
+            <div class="form-group"><label>Message</label><textarea placeholder="Tell us how we can help..." rows="4"></textarea></div>
             <button type="submit" class="btn btn--primary btn--full">Send Message</button>
           </form>
           <div class="form-success" id="formSuccess">
@@ -1331,17 +967,12 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       FOOTER
-  ════════════════════════════════════════ -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
-          <a href="#hero" class="logo">
-            <span class="logo-icon">G</span>
-            <span class="logo-text">Greatbridge <em>Academy</em></span>
-          </a>
+          <a href="#hero" class="logo"><span class="logo-icon">G</span><span class="logo-text">Greatbridge <em>Academy</em></span></a>
           <p>Shaping minds, building futures, one student at a time.</p>
           <div class="social-links">
             <a href="#" class="social-link">f</a>
@@ -1384,14 +1015,13 @@
     </div>
   </footer>
 
+  <a href="https://wa.me/254769642043" class="whatsapp-button" target="_blank">
+    <div class="whatsapp-button-inner">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
+      <span>Chat with us</span>
+    </div>
+  </a>
 
-<!-- WhatsApp Button with Badge -->
-<a href="https://wa.me/254769642043" class="whatsapp-button" target="_blank">
-  <div class="whatsapp-button-inner">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
-    <span>Chat with us</span>
-  </div>
-</a>
   <script src="script.js"></script>
 </body>
 </html>

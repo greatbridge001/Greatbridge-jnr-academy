@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
       cursor.style.left = mouseX + 'px';
     });
 
-    // Smooth follower animation
     function animateFollower() {
       followerX += (mouseX - followerX) * 0.12;
       followerY += (mouseY - followerY) * 0.12;
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateFollower();
 
-    // Scale cursor on hover of interactive elements
     const hoverEls = document.querySelectorAll('a, button, .program-card, .pillar, .cf-item, .news-card');
     hoverEls.forEach(el => {
       el.addEventListener('mouseenter', () => {
@@ -68,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Close menu on nav link click
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('open');
@@ -79,12 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── Scroll Reveal ──────────────────────────────────────── */
   const revealEls = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach(entry => {
       if (entry.isIntersecting) {
         const delay = parseInt(entry.target.dataset.delay || 0);
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, delay);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
         revealObserver.unobserve(entry.target);
       }
     });
@@ -92,18 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealEls.forEach(el => revealObserver.observe(el));
 
-  /* ── Count-up animation ──────────────────────────────────── */
+  /* ── Count-up animation ─────────────────────────────────── */
   const statNums = document.querySelectorAll('.stat-num[data-target]');
 
   function countUp(el) {
     const target = parseInt(el.dataset.target);
     const duration = 1800;
     const start = performance.now();
-
     function update(time) {
       const elapsed = time - start;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       el.textContent = Math.floor(eased * target).toLocaleString();
       if (progress < 1) requestAnimationFrame(update);
@@ -124,21 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
   statNums.forEach(el => statsObserver.observe(el));
 
   /* ── Testimonials Carousel ──────────────────────────────── */
-  const track   = document.getElementById('testimonialsTrack');
-  const prevBtn = document.getElementById('tPrev');
-  const nextBtn = document.getElementById('tNext');
+  const track    = document.getElementById('testimonialsTrack');
+  const prevBtn  = document.getElementById('tPrev');
+  const nextBtn  = document.getElementById('tNext');
   const dotsWrap = document.getElementById('tDots');
 
   if (track) {
     const cards = Array.from(track.querySelectorAll('.testimonial-card'));
     let current = 0;
 
-    // Determine how many cards to show
     function visibleCount() {
       return window.innerWidth <= 768 ? 1 : window.innerWidth <= 1024 ? 2 : 3;
     }
 
-    // Create dots
     function buildDots() {
       dotsWrap.innerHTML = '';
       const pageCount = Math.ceil(cards.length / visibleCount());
@@ -154,14 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const vc = visibleCount();
       const maxPage = Math.ceil(cards.length / vc) - 1;
       current = Math.max(0, Math.min(page, maxPage));
-
-      // Show/hide cards
       cards.forEach((card, idx) => {
         const start = current * vc;
         card.style.display = (idx >= start && idx < start + vc) ? 'block' : 'none';
       });
-
-      // Update dots
       dotsWrap.querySelectorAll('.tn-dot').forEach((d, i) => {
         d.classList.toggle('active', i === current);
       });
@@ -169,13 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     prevBtn.addEventListener('click', () => goTo(current - 1));
     nextBtn.addEventListener('click', () => goTo(current + 1));
-
     window.addEventListener('resize', () => { buildDots(); goTo(0); });
-
     buildDots();
     goTo(0);
 
-    // Auto-advance
     setInterval(() => {
       const maxPage = Math.ceil(cards.length / visibleCount()) - 1;
       goTo(current < maxPage ? current + 1 : 0);
@@ -189,12 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-
-      // Simulate sending
       const btn = contactForm.querySelector('button[type="submit"]');
       btn.textContent = 'Sending...';
       btn.disabled = true;
-
       setTimeout(() => {
         contactForm.style.display = 'none';
         formSuccess.classList.add('show');
@@ -202,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ── Smooth scroll for anchor links ─────────────────────── */
+  /* ── Smooth scroll ──────────────────────────────────────── */
   document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
@@ -210,42 +191,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const target = document.querySelector(href);
       if (target) {
         e.preventDefault();
-        const navH = parseInt(getComputedStyle(document.documentElement)
-          .getPropertyValue('--nav-h')) || 76;
-        window.scrollTo({
-          top: target.offsetTop - navH,
-          behavior: 'smooth'
-        });
+        const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 76;
+        window.scrollTo({ top: target.offsetTop - navH, behavior: 'smooth' });
       }
     });
   });
 
-  /* ── Active nav link highlight on scroll ────────────────── */
-  const sections = document.querySelectorAll('section[id]');
+  /* ── Active nav highlight ───────────────────────────────── */
+  const sections   = document.querySelectorAll('section[id]');
   const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
 
   window.addEventListener('scroll', () => {
     let current = '';
     sections.forEach(sec => {
-      if (window.scrollY >= sec.offsetTop - 120) {
-        current = sec.getAttribute('id');
-      }
+      if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
     });
     navAnchors.forEach(a => {
       a.style.color = '';
-      if (a.getAttribute('href') === '#' + current) {
-        a.style.color = 'var(--gold)';
-      }
+      if (a.getAttribute('href') === '#' + current) a.style.color = 'var(--gold)';
     });
   }, { passive: true });
 
-  /* ── Parallax subtle effect on hero orbs ────────────────── */
+  /* ── Parallax hero orbs ─────────────────────────────────── */
   const orbs = document.querySelectorAll('.hero-orb');
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     orbs.forEach((orb, i) => {
-      const speed = (i + 1) * 0.08;
-      orb.style.transform = `translateY(${scrollY * speed}px)`;
+      orb.style.transform = `translateY(${scrollY * (i + 1) * 0.08}px)`;
     });
   }, { passive: true });
 
@@ -265,13 +237,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeItems = [];
   let lbIndex = 0;
 
-  // Filter tabs
+  // When filter tab is clicked, show/hide items
+  // but also respect which gallery items are currently visible (not hidden-item)
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       const filter = tab.dataset.filter;
       galleryItems.forEach(item => {
+        // If item is an extra (hidden by load more) keep it hidden regardless of filter
+        const isExtra = item.dataset.extra === 'gallery' && item.classList.contains('hidden-item');
+        if (isExtra) return;
         const match = filter === 'all' || item.dataset.category === filter;
         item.classList.toggle('hidden', !match);
       });
@@ -281,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function getActiveItems() {
     return Array.from(galleryItems).filter(item =>
       !item.classList.contains('hidden') &&
+      !item.classList.contains('hidden-item') &&
       !item.classList.contains('gallery-item--quote')
     );
   }
@@ -326,10 +303,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (item.classList.contains('gallery-item--quote')) return;
       item.addEventListener('click', () => openLightbox(item));
     });
-
     lbClose.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-
     lbPrev.addEventListener('click', (e) => {
       e.stopPropagation();
       lbIndex = (lbIndex - 1 + activeItems.length) % activeItems.length;
@@ -340,13 +315,91 @@ document.addEventListener('DOMContentLoaded', () => {
       lbIndex = (lbIndex + 1) % activeItems.length;
       showLightboxItem(lbIndex);
     });
-
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowLeft') { lbIndex = (lbIndex - 1 + activeItems.length) % activeItems.length; showLightboxItem(lbIndex); }
       if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % activeItems.length; showLightboxItem(lbIndex); }
     });
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     SHOW MORE / LOAD MORE BUTTONS
+  ══════════════════════════════════════════════════════════ */
+
+  /**
+   * Generic show-more toggle
+   * @param {string} btnId       — id of the button
+   * @param {string} extraAttr   — value of data-extra on the hidden items
+   * @param {string} showLabel   — button label when items are hidden
+   * @param {string} hideLabel   — button label when items are shown
+   */
+  function initShowMore(btnId, extraAttr, showLabel, hideLabel) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+
+    const items = document.querySelectorAll(`[data-extra="${extraAttr}"]`);
+    let expanded = false;
+
+    btn.addEventListener('click', () => {
+      expanded = !expanded;
+      items.forEach(item => {
+        item.classList.toggle('hidden-item', !expanded);
+        // Trigger reveal animation for newly shown items
+        if (expanded && !item.classList.contains('visible')) {
+          setTimeout(() => item.classList.add('visible'), 50);
+        }
+      });
+      // Update button text & arrow
+      btn.querySelector('.btn-arrow') && (btn.querySelector('.btn-arrow').textContent = expanded ? '▴' : '▾');
+      btn.classList.toggle('expanded', expanded);
+      const textNode = btn.childNodes[0];
+      if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+        textNode.textContent = expanded ? hideLabel + ' ' : showLabel + ' ';
+      }
+    });
+  }
+
+  // Junior School Subjects — show 6 / hide 6
+  initShowMore('subjectsToggle', 'subjects', 'View More Subjects', 'Show Less');
+
+  // Academic Programmes — show 3 / hide 3
+  initShowMore('programmesToggle', 'programmes', 'View More Programmes', 'Show Less');
+
+  // Admission Forms — show 2 / hide 3
+  initShowMore('admissionToggle', 'admission', 'View All Forms', 'Show Less');
+
+  // Gallery Load More — show 8 / hide rest
+  initShowMore('galleryToggle', 'gallery', 'Load More Photos', 'Show Less');
+
+  /* ══════════════════════════════════════════════════════════
+     ACCORDION — School Rules
+  ══════════════════════════════════════════════════════════ */
+  const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+
+  accordionTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const body = trigger.nextElementSibling;
+      const isOpen = trigger.classList.contains('open');
+
+      // Close all others (one open at a time)
+      accordionTriggers.forEach(t => {
+        t.classList.remove('open');
+        t.nextElementSibling.classList.remove('open');
+      });
+
+      // Toggle clicked one
+      if (!isOpen) {
+        trigger.classList.add('open');
+        body.classList.add('open');
+      }
+    });
+  });
+
+  // Open first accordion by default so users know it's clickable
+  if (accordionTriggers.length > 0) {
+    accordionTriggers[0].classList.add('open');
+    accordionTriggers[0].nextElementSibling.classList.add('open');
   }
 
 });
